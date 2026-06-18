@@ -1,101 +1,106 @@
-
 # D2C Customer Churn Prediction System
 
 ## Project Overview
 
-This repository contains a complete machine learning pipeline for predicting customer churn for a Direct-to-Consumer (D2C) personal care brand.
+This repository provides a complete machine learning workflow designed to predict customer churn for a Direct-to-Consumer (D2C) personal care company.
 
-The objective is to identify customers who are likely to stop purchasing within the next 60 days so that the marketing and CRM teams can launch targeted retention campaigns.
+The main goal is to identify customers who are at risk of ceasing purchases within the upcoming 60 days, enabling CRM and marketing teams to execute targeted retention initiatives proactively.
 
 The project includes:
-- Data preparation and preprocessing
-- Explicit data leakage prevention
-- Baseline and advanced machine learning models
-- Model evaluation using business-relevant metrics
-- Decision threshold selection
-- Feature importance analysis
-- Error analysis
-- Model documentation
-- Saved production-ready model artifacts
+
+* Data preparation and preprocessing
+* Explicit data leakage prevention
+* Baseline and advanced machine learning models
+* Model evaluation using business-relevant metrics
+* Decision threshold selection
+* Feature importance analysis
+* Error analysis
+* Model documentation
+* Saved production-ready model artifacts
 
 ---
 
 ## Business Objective
 
-Retention budgets are limited. Sending incentives to every customer increases marketing costs and reduces campaign efficiency.
+Customer retention resources are limited. Offering incentives to every customer increases costs and lowers overall campaign effectiveness.
 
-This churn prediction system helps the business:
+This churn prediction solution enables the business to:
 
-- Identify customers with high churn probability.
-- Prioritize retention campaigns.
-- Reduce future revenue loss.
-- Improve customer engagement strategy.
-- Support data-driven CRM decisions.
+* Detect customers with a high likelihood of churn.
+* Prioritize retention efforts more effectively.
+* Minimize potential future revenue loss.
+* Strengthen customer engagement initiatives.
+* Enable data-driven CRM decision-making.
 
 ---
 
 ## Dataset Used
 
-The model uses the file:
+The model is trained using the following file:
 
-rfm_modeling_snapshot.csv
+`rfm_modeling_snapshot.csv`
 
-The dataset contains only features created using information available before the customer snapshot date.
+The dataset contains only features generated from information available before the customer snapshot date.
 
 Included feature categories:
 
-- Customer profile information
-- Acquisition channel
-- RFM behavior:
-  - Recency
-  - Frequency
-  - Monetary value
-- Return behavior
-- Support interaction history
-- Web and application activity
-- Marketing engagement signals
+* Customer profile information
+* Acquisition channel
+* RFM behavior:
+
+  * Recency
+  * Frequency
+  * Monetary value
+* Return behavior
+* Support interaction history
+* Web and application activity
+* Marketing engagement signals
 
 The target variable is:
 
-churn_next_60d
+`churn_next_60d`
 
-which indicates whether a customer stopped purchasing during the next 60-day prediction period.
+which identifies whether a customer stopped making purchases during the subsequent 60-day prediction window.
 
 ---
 
 ## Leakage Prevention Strategy
 
-To ensure realistic model performance, the following rules were applied:
+To maintain realistic and trustworthy model performance, the following safeguards were implemented:
 
-- Customer ID was removed from model inputs.
-- Snapshot date was removed from model inputs.
-- Target variable was never used as a feature.
-- Dataset split labels were never used as model features.
-- Only information available before the snapshot date was considered.
+* Customer ID was excluded from model features.
+* Snapshot date was excluded from model features.
+* The target variable was never included as an input feature.
+* Dataset split indicators were never used for training.
+* Only information available before the snapshot date was utilized.
 
-This prevents future information from influencing churn predictions.
+These controls ensure that future information cannot influence churn predictions.
 
 ---
 
 ## Repository Structure
 
+```text
 D2C-Churn-Prediction/
 
-├── churn_model.ipynb  
-├── model.pkl  
-├── metrics.json  
-├── error_analysis.md  
-├── model_card.md  
-├── requirements.txt  
-└── README.md  
+├── churn_model.ipynb
+├── model.pkl
+├── metrics.json
+├── error_analysis.md
+├── model_card.md
+├── requirements.txt
+└── README.md
+```
 
 ---
 
 ## Environment Setup
 
-Install required libraries using:
+Install all required dependencies using:
 
+```bash
 pip install -r requirements.txt
+```
 
 ---
 
@@ -109,53 +114,55 @@ Upload the provided D2C churn dataset package to Google Drive.
 
 Open:
 
-churn_model.ipynb
+`churn_model.ipynb`
 
 using Google Colab.
 
 ### Step 3: Verify Dataset Path
 
-The notebook expects the following path:
+The notebook expects the dataset to be available at:
 
+```text
 /content/drive/MyDrive/d2c churn data package/
+```
 
 ### Step 4: Execute All Cells
 
 Running the notebook will automatically:
 
-- Load the modeling dataset.
-- Perform leakage checks.
-- Create train, validation, and test datasets.
-- Train Logistic Regression baseline model.
-- Train Random Forest model.
-- Compare model performance.
-- Select the final model.
-- Apply business decision threshold.
-- Evaluate final performance.
-- Generate feature importance charts.
-- Save model artifacts.
+* Load the modeling dataset.
+* Perform leakage checks.
+* Create train, validation, and test datasets.
+* Train the Logistic Regression baseline model.
+* Train the Random Forest model.
+* Compare model performance.
+* Select the final model.
+* Apply the business decision threshold.
+* Evaluate final performance.
+* Generate feature importance visualizations.
+* Save model artifacts.
 
 ---
 
 ## Generated Output Files
 
-After successful execution, the repository will contain:
+After successful execution, the repository will contain the following outputs:
 
 ### model.pkl
 
-Contains the complete trained machine learning pipeline including preprocessing and classification model.
+Stores the complete trained machine learning pipeline, including preprocessing steps and the final classification model.
 
 ### metrics.json
 
 Contains:
 
-- Accuracy
-- Precision
-- Recall
-- F1 Score
-- ROC-AUC Score
-- Confusion Matrix values
-- Selected threshold
+* Accuracy
+* Precision
+* Recall
+* F1 Score
+* ROC-AUC Score
+* Confusion Matrix values
+* Selected threshold
 
 ---
 
@@ -163,6 +170,7 @@ Contains:
 
 Example:
 
+```python
 import joblib
 
 model = joblib.load("model.pkl")
@@ -170,70 +178,73 @@ model = joblib.load("model.pkl")
 probability = model.predict_proba(customer_data)[:, 1]
 
 prediction = (probability >= 0.40).astype(int)
+```
 
 ---
 
 ## Decision Threshold
 
-The selected threshold is 0.40.
+The selected classification threshold is **0.40**.
 
-A lower threshold is chosen because missing a customer who is likely to churn has a higher business cost than sending a retention offer to a customer who would have stayed.
+A lower threshold was intentionally chosen because failing to identify a customer who is likely to churn has a greater business impact than sending a retention offer to a customer who would have remained active.
 
-This strategy increases churn detection recall while keeping campaign costs manageable.
+This approach improves churn detection recall while maintaining reasonable campaign costs.
 
 ---
 
 ## Evaluation Metrics
 
-The model is evaluated using:
+The model is assessed using:
 
-- Accuracy
-- Precision
-- Recall
-- F1 Score
-- ROC-AUC
+* Accuracy
+* Precision
+* Recall
+* F1 Score
+* ROC-AUC
 
-Accuracy alone is not considered sufficient because churn prediction requires balancing multiple types of business errors.
+Accuracy alone is not sufficient because churn prediction requires balancing multiple types of business-related prediction errors.
 
 ---
 
 ## Error Analysis
 
-The file error_analysis.md includes:
+The `error_analysis.md` file includes:
 
-- False Positive examples.
-- False Negative examples.
-- Business impact of prediction mistakes.
-- Customer-level case interpretations.
+* False Positive examples.
+* False Negative examples.
+* Business implications of prediction errors.
+* Customer-level interpretation of model outcomes.
 
 ---
 
 ## Responsible Usage
 
-The model should be used as a decision-support tool.
+This model is intended to function as a decision-support system.
 
-Predictions should assist CRM and marketing teams, but important customer decisions should include human review.
+Predictions should assist CRM and marketing teams, while important customer-related decisions should continue to involve human review and judgment.
 
-The model should not be used for legal, employment, financial, or discriminatory decisions.
+The model should not be used for legal, employment, financial, or discriminatory purposes.
 
 ---
 
 ## Future Improvements
 
-Potential future enhancements:
+Potential future enhancements include:
 
-- Hyperparameter optimization.
-- XGBoost or LightGBM implementation.
-- Customer lifetime value integration.
-- Continuous monitoring for data drift.
-- Automated model retraining.
+* Hyperparameter optimization.
+* XGBoost or LightGBM implementation.
+* Customer lifetime value integration.
+* Continuous monitoring for data drift.
+* Automated model retraining.
 
 ---
 
 ## Project Information
 
-Project Name:
+### Project Name
+
 D2C Customer Churn Intelligence - Part 3
 
-Objective:
+### Objective
+
 Production-ready customer churn prediction and documentation pipeline.
