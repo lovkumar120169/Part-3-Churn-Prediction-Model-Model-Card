@@ -1,21 +1,22 @@
-
 # D2C Customer Churn Prediction Model Card
 
 ## 1. Model Overview
 
 ### Model Name
+
 D2C Customer Churn Prediction Model
 
 ### Model Version
+
 Version 1.0
 
 ### Business Objective
 
-This machine learning model predicts the probability that a customer will churn within the next 60 days after the snapshot date.
+This machine learning solution estimates the likelihood that a customer will churn within the 60-day period following the snapshot date.
 
-The model supports the marketing, CRM, and retention teams in identifying customers who should receive proactive engagement campaigns such as personalized offers, loyalty benefits, product recommendations, or service improvements.
+The model assists marketing, CRM, and customer retention teams in identifying customers who may benefit from proactive engagement initiatives, including personalized offers, loyalty incentives, product recommendations, or service enhancement programs.
 
-The model is designed to prioritize retention resources efficiently instead of sending expensive campaigns to every customer.
+Its primary purpose is to optimize the allocation of retention resources rather than applying costly campaigns across the entire customer base.
 
 ---
 
@@ -23,26 +24,26 @@ The model is designed to prioritize retention resources efficiently instead of s
 
 ## Appropriate Use Cases
 
-The model should be used for:
+The model is intended for:
 
-- Prioritizing customers for retention campaigns.
-- Ranking customers according to their predicted churn risk.
-- Supporting CRM teams in deciding where retention budgets should be allocated.
-- Identifying customer segments requiring additional manual review.
-- Monitoring changes in customer engagement and loyalty trends over time.
+* Prioritizing customers for retention initiatives.
+* Ranking customers based on predicted churn likelihood.
+* Assisting CRM teams in allocating retention budgets more effectively.
+* Identifying customer groups that may require additional manual assessment.
+* Tracking changes in customer loyalty and engagement patterns over time.
 
 ---
 
 ## Inappropriate Use Cases
 
-This model must NOT be used for:
+This model should NOT be used for:
 
-- Making final decisions without human business review.
-- Determining customer eligibility for essential services.
-- Discriminating against customers based on personal attributes.
-- Making financial, legal, or employment-related decisions.
-- Predicting customer behavior beyond the defined 60-day prediction window.
-- Evaluating customers using data collected after the snapshot date.
+* Making final customer decisions without human review.
+* Determining access to essential products or services.
+* Discriminatory decision-making based on personal characteristics.
+* Financial, legal, employment, or regulatory decision-making.
+* Predicting customer behavior beyond the defined 60-day horizon.
+* Evaluating customers using information collected after the snapshot date.
 
 ---
 
@@ -50,29 +51,29 @@ This model must NOT be used for:
 
 ## Dataset Sources
 
-The model uses historical customer information available on or before the snapshot date.
+The model is trained using historical customer information available on or before the designated snapshot date.
 
 Primary data sources include:
 
-- Customer demographic and acquisition attributes.
-- Purchase recency, frequency, and monetary value (RFM) signals.
-- Product category purchasing behavior.
-- Historical return patterns.
-- Customer support interaction history.
-- Website and mobile application engagement metrics.
-- Marketing campaign interaction signals.
+* Customer demographic and acquisition-related attributes.
+* RFM indicators, including recency, frequency, and monetary value.
+* Product category purchasing behavior.
+* Historical return activity.
+* Customer support interaction records.
+* Website and mobile application engagement metrics.
+* Marketing and campaign engagement signals.
 
 ---
 
 ## Leakage Prevention Strategy
 
-To prevent data leakage:
+Several safeguards were implemented to prevent data leakage:
 
-- Only features available on or before the snapshot date were used.
-- The target variable `churn_next_60d` was excluded from model inputs.
-- Dataset identifiers such as `customer_id` and `snapshot_date` were excluded from training.
-- The predefined train, validation, and test splits were respected during evaluation.
-- Future customer behavior occurring inside the target window was never used as a predictive feature.
+* Only features available on or before the snapshot date were included.
+* The target variable `churn_next_60d` was excluded from model inputs.
+* Identifiers such as `customer_id` and `snapshot_date` were removed before training.
+* Predefined training, validation, and testing splits were strictly maintained.
+* Future customer activity occurring within the prediction window was never used as a predictive feature.
 
 ---
 
@@ -80,67 +81,67 @@ To prevent data leakage:
 
 ## Baseline Model
 
-A Logistic Regression classifier was trained as a simple, interpretable benchmark model.
+A Logistic Regression classifier was developed as a simple and interpretable benchmark model.
 
-Purpose:
+### Purpose:
 
-- Establish a minimum expected performance.
-- Provide a transparent comparison against more complex algorithms.
+* Establish a baseline performance benchmark.
+* Enable transparent comparison with more advanced algorithms.
 
 ---
 
 ## Final Production Model
 
-A stronger ensemble model (Random Forest) was trained and compared against the baseline model.
+A more robust ensemble-based model (Random Forest) was trained and evaluated against the baseline model.
 
-Selection was based on validation performance using metrics suitable for imbalanced churn prediction, including:
+Model selection was based on validation performance using metrics appropriate for churn prediction and class imbalance, including:
 
-- Precision
-- Recall
-- F1-score
-- ROC-AUC
+* Precision
+* Recall
+* F1-score
+* ROC-AUC
 
-The final model selected the algorithm with the best balance between identifying churners and controlling unnecessary retention actions.
+The final model was chosen based on its ability to balance churn detection effectiveness with minimizing unnecessary retention actions.
 
 ---
 
 # 5. Performance Metrics
 
-The model evaluation includes the following measurements:
+The model evaluation includes the following metrics:
 
-| Metric | Business Meaning |
-|---|---|
-| Accuracy | Overall percentage of correct predictions. |
-| Precision | Percentage of predicted churners who actually churn. |
-| Recall | Percentage of actual churners successfully identified. |
-| F1-score | Balance between precision and recall. |
-| ROC-AUC | Ability of the model to distinguish churners from retained customers. |
+| Metric    | Business Meaning                                                             |
+| --------- | ---------------------------------------------------------------------------- |
+| Accuracy  | Overall proportion of correctly classified customers.                        |
+| Precision | Percentage of predicted churners who actually churned.                       |
+| Recall    | Percentage of actual churners successfully identified by the model.          |
+| F1-score  | Combined measure balancing precision and recall.                             |
+| ROC-AUC   | Ability of the model to distinguish between churners and retained customers. |
 
-The exact metric values are stored in the generated `metrics.json` file produced during model execution.
+Detailed metric values are stored in the generated `metrics.json` file produced during model execution.
 
 ---
 
 # 6. Decision Threshold Strategy
 
-The default classification threshold is set to **0.40** instead of the traditional 0.50.
+The default classification threshold is configured at **0.40** rather than the conventional 0.50.
 
 ### Business Justification
 
-The company considers missing a true churner more expensive than contacting a customer who may not actually churn.
+From a business perspective, failing to identify a genuine churn-risk customer is more costly than contacting a customer who ultimately remains active.
 
-A lower threshold increases recall, allowing the retention team to identify more at-risk customers while accepting a controlled number of false positive cases.
+Using a lower threshold improves recall, allowing the retention team to capture more at-risk customers while accepting a manageable number of false positive predictions.
 
 ---
 
 # 7. Model Limitations
 
-The model has several important limitations:
+Several limitations should be considered when interpreting model outputs:
 
-- Customer preferences may change because of external market factors unavailable in historical data.
-- Sudden competitor promotions or personal circumstances cannot be predicted.
-- Prediction quality may decline if customer behavior patterns change significantly over time.
-- The model does not understand the exact reasons behind churn; it only detects patterns associated with churn.
-- Retention campaign effectiveness is not directly modeled.
+* Customer preferences may shift due to external market influences that are not reflected in historical data.
+* Unexpected competitor actions or personal customer circumstances cannot be anticipated.
+* Model performance may deteriorate if customer behavior evolves significantly over time.
+* The model identifies churn-related patterns but does not determine the exact reasons behind churn.
+* The effectiveness of retention campaigns is not directly incorporated into the model.
 
 ---
 
@@ -148,56 +149,61 @@ The model has several important limitations:
 
 Potential risks include:
 
-- Incorrectly classifying loyal customers as churn risks.
-- Missing customers who are actually planning to leave.
-- Creating unfair retention strategies if predictions are used without human oversight.
+* Incorrectly identifying loyal customers as churn risks.
+* Failing to detect customers who are genuinely planning to leave.
+* Creating unfair retention practices if predictions are used without appropriate human oversight.
 
-Mitigation strategies:
+### Mitigation Strategies
 
-- Human review should be performed for high-value customers.
-- Model performance should be monitored regularly across customer groups.
-- Retention actions should focus on improving customer experience rather than manipulating customer behavior.
-- The model should be retrained periodically using updated customer data.
+* High-value customer cases should undergo human review before action is taken.
+* Model performance should be monitored regularly across different customer groups.
+* Retention initiatives should focus on improving customer experience rather than influencing behavior unfairly.
+* The model should be retrained periodically using updated customer information.
 
 ---
 
 # 9. Monitoring and Maintenance Plan
 
-After deployment, the following indicators should be monitored:
+Following deployment, the following indicators should be continuously monitored:
 
 ## Data Monitoring
 
-- Changes in feature distributions.
-- Missing value increases.
-- Unexpected customer behavior patterns.
+* Shifts in feature distributions.
+* Increases in missing data.
+* Unusual or unexpected customer behavior trends.
 
 ## Model Monitoring
 
-- Precision, recall, F1-score, and ROC-AUC trends.
-- False Positive and False Negative rates.
-- Prediction probability distribution changes.
+* Trends in precision, recall, F1-score, and ROC-AUC.
+* False Positive and False Negative rates.
+* Changes in prediction probability distributions.
 
 ## Business Monitoring
 
-- Retention campaign conversion rates.
-- Customer lifetime value improvement.
-- Return on investment from retention spending.
+* Retention campaign conversion performance.
+* Improvements in customer lifetime value.
+* Return on investment from retention activities.
 
-Recommended retraining frequency:
-Every 3 to 6 months, or earlier if significant data drift is detected.
+### Recommended Retraining Frequency
+
+Every 3 to 6 months, or sooner if significant data drift or performance degradation is detected.
 
 ---
 
 # 10. Approval and Ownership
 
-Model Owner:
+### Model Owner
+
 Data Science Team
 
-Primary Business Stakeholders:
+### Primary Business Stakeholders
+
 Marketing Team, CRM Team, and Customer Experience Team
 
-Deployment Status:
+### Deployment Status
+
 Internal Decision Support System
 
-Approval Status:
-Ready for controlled business evaluation after validation.
+### Approval Status
+
+Approved for controlled business evaluation following validation and review.
